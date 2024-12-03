@@ -3,7 +3,9 @@ import { readFileSync } from 'fs';
 import { Hono } from 'hono';
 import { cache } from 'hono/cache';
 import { etag } from 'hono/etag';
+import crypto from 'crypto'; // Import the crypto module for hashing
 import { logger } from 'hono/logger';
+import path from 'path';
 import { serveStatic } from '@hono/node-server/serve-static';
 const app = new Hono();
 app.use(logger());

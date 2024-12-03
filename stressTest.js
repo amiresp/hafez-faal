@@ -1,8 +1,9 @@
 import axios from 'axios';
-const targetUrl = 'http://localhost:3000/faal';
+// const targetUrl = 'http://localhost:3000/faal';
+const targetUrl = 'https://faal.liara.run/faal';
 // const targetUrl = 'http://localhost:3000/public/Hafez-Song271.mp3';
-const numRequests = 3000;
-const concurrency = 2800;
+const numRequests = 1000;
+const concurrency = 500;
 let successCount = 0;
 let failureCount = 0;
 let totalResponseTime = 0;
