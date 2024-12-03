@@ -3,7 +3,8 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "sounds": "tsx watch src/downloadSources.ts"
+    "sounds": "tsx watch src/downloadSources.ts",
+    "start": "node src/index"
   },
   "dependencies": {
     "@hono/node-server": "^1.13.7",
