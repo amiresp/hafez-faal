@@ -1,0 +1,20 @@
+{
+  "name": "hafez-faal",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "sounds": "tsx watch src/downloadSources.ts"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.13.7",
+    "axios": "^1.7.8",
+    "crypto": "^1.0.1",
+    "hono": "^4.6.12",
+    "http": "^0.0.1-security",
+    "node-fetch": "^3.3.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.17",
+    "tsx": "^4.7.1"
+  }
+}
