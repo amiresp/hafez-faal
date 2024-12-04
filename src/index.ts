@@ -50,6 +50,14 @@ app.use(
   })
 );
 
+app.use(
+  '/static/*',
+  serveStatic({
+    root: './public',
+    rewriteRequestPath: (path: string) => path.replace(/^\/static/, '')
+  })
+);
+
 app.get(
   '/health', cache({
     cacheName: 'hello',

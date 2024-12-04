@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "sounds": "tsx watch src/downloadSources.ts",
-    "start": "node src/index",
+    "start": "npx tsc && node src/index",
     "stress": "npx tsc && node stressTest"
   },
   "dependencies": {

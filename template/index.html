@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>فال حافظ</title>
+    <meta name="robots" content="noindex">
+    <link rel="stylesheet" href="/static/css/main.css">
 </head>
 
 <body>
@@ -13,6 +15,30 @@
             direction: rtl;
         }
     </style>
+
+    <section>
+        <div class="col-big">
+            <h4>چطور فال حافظ بگیریم ؟</h4>
+            <p>
+                روش صحیح گرفتن فال حافظ
+                یک نفر از بزرگان خانواده یا کسی که بتواند شعر را به خوبی بخواند یا کسی که دیگران معتقدند به اصطلاح خوب
+                فال می‌گیرد ابتدا نیت می‌کند، یعنی در دل آرزویی می‌کند. سپس به طور تصادفی صفحه‌ای را از کتاب حافظ
+                می‌گشاید و با صدای بلند شروع به خواندن می‌کند. کسانی که ایمان مذهبی داشته باشند هنگام فال گرفتن فاتحهای
+                می‌خوانند و سپس کتاب حافظ را می‌بوسند، آنگاه با ذکر اورادی آن را می‌گشایند و فال خود را می‌خوانند.
+                نیت کننده معمولاً در هنگام تفأل از دیوان حافظ، او را به عزیزترین کسانش یعنی به خداوند و معشوقه اش (شاخ
+                نبات) قسم می دهد. این قسم معمولاً به این شکل ادا می شود (ضمن اینکه شاید بهتر باشد برای شادی روح حافظ،
+                صلوات یا فاتحه ای نثار نماییم):</p>
+        </div>
+
+        <div class="col-med">
+            <img src="/static/hafeziee.png" />
+        </div>
+    </section>
+
+    <section>
+        <img src="/static/pem.jpg" class="center-image" />
+    </section>
+
     <div class="fal-content">
         <h1></h1>
         <div class="org-content"></div>
@@ -37,7 +63,12 @@
             console.log(data);
             document.querySelector('h1').textContent = data.title;
             document.querySelector('.fal-content .org-content').innerHTML = data.content;
-            document.querySelector('.fal-content audio').setAttribute('src', data.src)
+            document.querySelector('.fal-content audio').setAttribute('src', data.src);
+            document.querySelector('.faal').setAttribute('disabled', true);
+
+            setTimeout(() => {
+                document.querySelector('.faal').removeAttribute('disabled');
+            }, 15000)
         })
     </script>
 </body>
