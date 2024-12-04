@@ -1,13 +1,19 @@
+* {
+    font-family: "Vazirmatn", sans-serif;
+}
+
+body {
+    margin: 0;
+    font-family: "Vazirmatn", sans-serif;
+}
+
+
 section {
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 12px;
     margin: 40px auto;
-}
-
-body {
-    margin: 0;
 }
 
 section h4 {
@@ -55,4 +61,9 @@ img {
     margin: 0 auto;
     max-width: 300px;
     text-align: center;
+}
+
+button.faal[disabled] {
+    opacity: 0.5;
+    pointer-events: none;
 }
