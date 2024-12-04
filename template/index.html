@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>فال حافظ</title>
+</head>
+
+<body>
+    <style>
+        * {
+            direction: rtl;
+        }
+    </style>
+    <div class="fal-content">
+        <h1></h1>
+        <div class="org-content"></div>
+        <audio controls></audio>
+    </div>
+    <button type="button" class="faal">نیت کنید و کلیک کنید.</button>
+
+    <script>
+
+        function runFal() {
+            return new Promise((resolve, reject) => {
+                fetch('/faal').then((res) => res.json()).then((res) => {
+                    resolve(res);
+                }).catch(err => {
+                    // Either gets error from `fetch` or failure from `then` above
+                    reject(err);
+                });
+            });
+        }
+        document.querySelector('.faal').addEventListener('click', async () => {
+            let data = await runFal();
+            console.log(data);
+            document.querySelector('h1').textContent = data.title;
+            document.querySelector('.fal-content .org-content').innerHTML = data.content;
+            document.querySelector('.fal-content audio').setAttribute('src', data.src)
+        })
+    </script>
+</body>
+
+</html>

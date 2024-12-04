@@ -3,12 +3,11 @@ import { readFileSync } from 'fs'
 import { Hono, type Context, type Next } from 'hono'
 import { cache } from 'hono/cache'
 import { etag } from 'hono/etag'
-import crypto from 'crypto'  // Import the crypto module for hashing
 import { logger } from 'hono/logger'
-import path from 'path'
 import { serveStatic } from '@hono/node-server/serve-static';
 import { getConnInfo } from 'hono/cloudflare-workers'
 import { RateLimit } from "@rlimit/http";
+import { html, raw } from 'hono/html'
 
 const app = new Hono()
 
@@ -41,6 +40,7 @@ app.use(rateLimitMiddleware);
 
 // متغیر کش برای نگهداری فایل
 let cachedFile: string | null = null;
+let indexFile: string | null = null;
 
 app.use(
   '/public/*',
@@ -51,13 +51,29 @@ app.use(
 );
 
 app.get(
-  '/', cache({
+  '/health', cache({
     cacheName: 'hello',
     cacheControl: 'max-age=3600',
   }), async (c: Context) => {
     const info = getConnInfo(c) // info is `ConnInfo`
 
     return c.json({ 'ok': true, time: new Date().getTime(), ip: info.remote.address })
+  });
+
+app.get(
+  '/', cache({
+    cacheName: 'index',
+    cacheControl: 'max-age=3600',
+  }), async (c: Context) => {
+    const info = getConnInfo(c) // info is `ConnInfo`
+    let indexFile;
+    if (indexFile) {
+    } else {
+      indexFile = readFileSync('./template/index.html',
+        { encoding: 'utf8' });
+    }
+
+    return c.html(indexFile);
   });
 
 
