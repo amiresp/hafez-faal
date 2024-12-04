@@ -3,7 +3,9 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "sounds": "tsx watch src/downloadSources.ts"
+    "sounds": "tsx watch src/downloadSources.ts",
+    "start": "node src/index",
+    "stress": "npx tsc && node stressTest"
   },
   "dependencies": {
     "@hono/node-server": "^1.13.7",
@@ -12,7 +14,8 @@
     "crypto": "^1.0.1",
     "hono": "^4.6.12",
     "http": "^0.0.1-security",
-    "node-fetch": "^3.3.2"
+    "node-fetch": "^3.3.2",
+    "typescript": "^5.7.2"
   },
   "devDependencies": {
     "@types/node": "^20.11.17",
