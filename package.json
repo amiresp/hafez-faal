@@ -7,6 +7,7 @@
   },
   "dependencies": {
     "@hono/node-server": "^1.13.7",
+    "@rlimit/http": "^0.0.5",
     "axios": "^1.7.8",
     "crypto": "^1.0.1",
     "hono": "^4.6.12",

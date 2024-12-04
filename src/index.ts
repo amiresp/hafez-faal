@@ -1,18 +1,43 @@
 import { serve } from '@hono/node-server'
 import { readFileSync } from 'fs'
-import { Hono, type Context } from 'hono'
+import { Hono, type Context, type Next } from 'hono'
 import { cache } from 'hono/cache'
 import { etag } from 'hono/etag'
 import crypto from 'crypto'  // Import the crypto module for hashing
 import { logger } from 'hono/logger'
 import path from 'path'
 import { serveStatic } from '@hono/node-server/serve-static';
+import { getConnInfo } from 'hono/cloudflare-workers'
+import { RateLimit } from "@rlimit/http";
 
 const app = new Hono()
 
 app.use(logger());
 app.use('/public/*', etag())
 
+const rlimit = new RateLimit({
+  namespace: "example", // your rlimit.com namespace
+  maximum: 1000,
+  interval: "1s",
+});
+
+const rateLimitMiddleware = async (c: Context, next: Next) => {
+  const identifier =
+    c.req.header("x-forwarded-for") || c.req.header("x-real-ip") || "anon";
+
+  console.info(identifier);
+
+  const limit = await rlimit.check(identifier);
+  console.info(limit, identifier);
+
+  if (!limit.ok) {
+    return c.json({ "message": "too many requests" }, 429);
+  }
+
+  await next();
+};
+
+app.use(rateLimitMiddleware);
 
 // متغیر کش برای نگهداری فایل
 let cachedFile: string | null = null;
@@ -24,6 +49,17 @@ app.use(
     rewriteRequestPath: (path: string) => path.replace(/^\/public/, '')
   })
 );
+
+app.get(
+  '/', cache({
+    cacheName: 'hello',
+    cacheControl: 'max-age=3600',
+  }), async (c: Context) => {
+    const info = getConnInfo(c) // info is `ConnInfo`
+
+    return c.json({ 'ok': true, time: new Date().getTime(), ip: info.remote.address })
+  });
+
 
 app.get(
   '/faal',

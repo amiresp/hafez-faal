@@ -127,6 +127,11 @@
   resolved "https://registry.yarnpkg.com/@hono/node-server/-/node-server-1.13.7.tgz#af95cf97bd24ddffc97e72851738cbde0a98c791"
   integrity sha512-kTfUMsoloVKtRA2fLiGSd9qBddmru9KadNyhJCwgKBxTiNkaAJEwkVN9KV/rS4HtmmNRtUh6P+YpmjRMl0d9vQ==
 
+"@rlimit/http@^0.0.5":
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/@rlimit/http/-/http-0.0.5.tgz#1bd4241173d68eee78b7be79173bb706a9dbb3a3"
+  integrity sha512-OxlZPjCW5M1Nk10Ml5I8NwjePXCTMPqVUxKuLZfKjGMrC9HRYWlYFwD+FM/Lxcc/yZhWtXW8OmEBBeBysmy1PA==
+
 "@types/node@^20.11.17":
   version "20.17.9"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-20.17.9.tgz#5f141d4b7ee125cdee5faefe28de095398865bab"
