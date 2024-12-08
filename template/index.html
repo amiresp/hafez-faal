@@ -22,7 +22,7 @@
         }
     </style>
 
-    <section>
+    <section class="hero">
         <div class="col-big">
             <h4>چطور فال حافظ بگیریم ؟</h4>
             <p>
@@ -48,9 +48,9 @@
     <div class="fal-content">
         <h1></h1>
         <div class="org-content"></div>
-        <audio controls></audio>
+        <audio controls hidden></audio>
     </div>
-    <button type="button" class="faal">نیت کنید و کلیک کنید.</button>
+    <button type="button" class="faal">نیت کنید و کلیک کنید.<i></i></button>
 
     <script>
 
@@ -66,15 +66,30 @@
         }
         document.querySelector('.faal').addEventListener('click', async () => {
             let data = await runFal();
-            console.log(data);
+
             document.querySelector('h1').textContent = data.title;
             document.querySelector('.fal-content .org-content').innerHTML = data.content;
             document.querySelector('.fal-content audio').setAttribute('src', data.src);
+            document.querySelector('.fal-content audio').removeAttribute('hidden');
             document.querySelector('.faal').setAttribute('disabled', true);
 
-            setTimeout(() => {
-                document.querySelector('.faal').removeAttribute('disabled');
-            }, 15000)
+            let timerActive = 16;
+            requestAnimationFrame(runFal);
+            let btnTimer = setInterval(() => {
+                --timerActive;
+                console.log(timerActive);
+                document.querySelector('.faal i').innerHTML = `${timerActive}`;
+                if (timerActive <= 0) {
+                    clearInterval(btnTimer);
+                    document.querySelector('.faal').removeAttribute('disabled');
+                    document.querySelector('.faal i').innerHTML = ``;
+                }
+            }, 1000);
+
+            // setTimeout(() => {
+            //     document.querySelector('.faal').removeAttribute('disabled');
+            //     clearInterval(btnTimer);
+            // }, 16000)
         })
     </script>
 </body>

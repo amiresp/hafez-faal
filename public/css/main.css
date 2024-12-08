@@ -2,9 +2,16 @@
     font-family: "Vazirmatn", sans-serif;
 }
 
+@font-face {
+    font-family: 'Golpayegani';
+    src: url('../Webfonts//SD-Golpayegani\ Grunge.woff2') format('woff2'), url('../Webfonts//SD-Golpayegani\ Grunge.woff') format('woff'), url('../Webfonts//SD-Golpayegani\ Grunge.eot?#') format('eot');
+}
+
 body {
     margin: 0;
     font-family: "Vazirmatn", sans-serif;
+    /* max-width: 950px; */
+    margin: 0 auto;
 }
 
 
@@ -14,13 +21,24 @@ section {
     justify-content: space-between;
     padding: 12px;
     margin: 40px auto;
+    gap: 24px;
+}
+
+.hero {
+    margin-top: 0;
+    padding: 24px;
+    padding-bottom: 0;
+    background: #bbf1ef;
+    background: -moz-linear-gradient(top, rgba(187, 241, 239, 1) 0%, rgba(194, 235, 246, 1) 100%);
+    background: -webkit-linear-gradient(top, rgba(187, 241, 239, 1) 0%, rgba(194, 235, 246, 1) 100%);
+    background: linear-gradient(to bottom, rgba(187, 241, 239, 1) 0%, rgba(194, 235, 246, 1) 100%);
+    border-bottom: 2px solid #323648;
 }
 
 section h4 {
     font-size: 2em;
     word-spacing: -2px;
     text-align: right;
-    font-family: Yekan_bold, Arial, sans-serif;
     font-weight: 700;
     margin-bottom: 25px;
     color: #323648;
@@ -37,10 +55,9 @@ button.faal {
     background-color: #1894ff;
     border-radius: 10px;
     margin-top: 16px;
-    font-size: 1.8em;
-    padding: 16px;
+    font-size: 1.2em;
+    padding: 16px 24px;
     word-spacing: -3px;
-    font-family: Yekan, Arial, sans-serif;
     max-width: 100%;
     color: #fff;
     margin: 20px auto;
@@ -59,11 +76,41 @@ img {
 
 .fal-content {
     margin: 0 auto;
-    max-width: 300px;
+    max-width: 400px;
     text-align: center;
+    font-family: 'Golpayegani';
+    line-height: 1.85;
+}
+
+.fal-content p {
+    margin: 0 auto;
+    text-align: center;
+    font-size: 22px;
+    font-family: 'Golpayegani';
 }
 
 button.faal[disabled] {
     opacity: 0.5;
     pointer-events: none;
+}
+
+@media screen and (max-width:640px) {
+    .hero {
+        flex-wrap: wrap;
+    }
+
+    .hero>div {
+        width: 100%;
+    }
+
+    .fal-content h1,
+    .fal-content h2 {
+        font-size: 26px;
+        font-weight: bold;
+        border-bottom: 2px solid #636363;
+    }
+
+    .fal-content h2 {
+        font-size: 24px;
+    }
 }
