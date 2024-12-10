@@ -58,6 +58,7 @@
             return new Promise((resolve, reject) => {
                 fetch('/falfront')
                     .then((res) => {
+                        console.log(res.status);
                         // بررسی کد وضعیت
                         if (!res.ok) { // اگر وضعیت کد 2xx نباشد
                             return reject({
@@ -81,7 +82,11 @@
 
         document.querySelector('.faal').addEventListener('click', async () => {
             let data = await runFal();
-
+            console.log(data);
+            if (!data.ok) {
+                alert(data.message);
+                return
+            }
             document.querySelector('h1').textContent = data.title;
             document.querySelector('.fal-content .org-content').innerHTML = data.content;
             document.querySelector('.fal-content audio').setAttribute('src', data.src);
@@ -89,22 +94,18 @@
             document.querySelector('.faal').setAttribute('disabled', true);
 
             let timerActive = 16;
-            requestAnimationFrame(runFal);
-            let btnTimer = setInterval(() => {
-                --timerActive;
-                console.log(timerActive);
-                document.querySelector('.faal i').innerHTML = `${timerActive}`;
-                if (timerActive <= 0) {
-                    clearInterval(btnTimer);
-                    document.querySelector('.faal').removeAttribute('disabled');
-                    document.querySelector('.faal i').innerHTML = ``;
-                }
-            }, 1000);
+            requestAnimationFrame(() => {
+                let btnTimer = setInterval(() => {
+                    --timerActive;
+                    document.querySelector('.faal i').innerHTML = `${timerActive}`;
+                    if (timerActive <= 0) {
+                        clearInterval(btnTimer);
+                        document.querySelector('.faal').removeAttribute('disabled');
+                        document.querySelector('.faal i').innerHTML = ``;
+                    }
+                }, 1000);
+            });
 
-            // setTimeout(() => {
-            //     document.querySelector('.faal').removeAttribute('disabled');
-            //     clearInterval(btnTimer);
-            // }, 16000)
         })
     </script>
 </body>

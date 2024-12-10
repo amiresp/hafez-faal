@@ -36,7 +36,7 @@ const rateLimitMiddleware = async (c: Context, next: Next) => {
   console.info(limit, identifier);
 
   if (!limit.ok) {
-    return c.json({ "message": "too many requests" }, 429);
+    return c.json({ "ok": false, "message": "too many requests" }, 429);
   }
 
   await next();
@@ -93,6 +93,7 @@ const checkDomainMiddleware = async (c: any, next: () => Promise<void>) => {
   }
 }
 
+// static routes
 app.use(
   '/public/*',
   serveStatic({
@@ -162,6 +163,7 @@ app.get(
     let randomFal = hafez[randomIndex];
 
     randomFal['src'] = `/public/Hafez-Song${String(randomIndex + 1).padStart(3, '0')}.mp3`
+    randomFal['ok'] = true;
     return c.json(randomFal)
   }
 )
@@ -183,7 +185,7 @@ app.get('/falfront', rateLimitMiddleware, (c: Context) => {
   let randomFal = hafez[randomIndex];
 
   randomFal['src'] = `/public/Hafez-Song${String(randomIndex + 1).padStart(3, '0')}.mp3`
-
+  randomFal['ok'] = true;
 
   return c.json(randomFal)
 })

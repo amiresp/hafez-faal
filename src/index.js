@@ -26,11 +26,10 @@ const rateLimitMiddleware = async (c, next) => {
     const limit = await rlimit.check(identifier);
     console.info(limit, identifier);
     if (!limit.ok) {
-        return c.json({ "message": "too many requests" }, 429);
+        return c.json({ "ok": false, "message": "too many requests" }, 429);
     }
     await next();
 };
-app.use(rateLimitMiddleware);
 const getIp = async (c) => {
     // بررسی هدرهای استاندارد برای دریافت IP
     const forwarded = c.req.header('x-forwarded-for'); // از Hono می‌خوانیم
@@ -42,15 +41,6 @@ const getIp = async (c) => {
     const ip = forwarded || realIp || cfIp || remoteAddr || 'Unknown IP';
     return ip;
 };
-app.use('/public/*', serveStatic({
-    root: './sounds',
-    rewriteRequestPath: (path) => path.replace(/^\/public/, '')
-}));
-app.use('/static/*', serveStatic({
-    root: './public',
-    rewriteRequestPath: (path) => path.replace(/^\/static/, '')
-}));
-// Middleware برای چک کردن دامنه‌ها
 const checkDomainMiddleware = async (c, next) => {
     // const origin = c.req.header('origin')
     // const referer = c.req.header('Referer') || 'No Referer'
@@ -68,10 +58,10 @@ const checkDomainMiddleware = async (c, next) => {
             console.log("Resetting value for:", firstItem);
             firstItem.allCount = firstItem.allCount + firstItem.count;
             firstItem.count = 1;
-            firstItem.time = currentTime; // به‌روزرسانی تاریخ به زمان فعلی
+            firstItem.time = currentTime;
         }
         else {
-            console.log("Not yet 2 hours. Remaining time:", 2 * 60 * 60 * 1000 - timeDifference, "ms");
+            // console.log("Ip Table", countedIpTable);
         }
     }
     if (indexIP > -1 && countedIpTable[indexIP].count < 300000) {
@@ -81,20 +71,20 @@ const checkDomainMiddleware = async (c, next) => {
         return c.json({ ok: false, message: 'Too Many Requests for this ip' }, 426);
     }
 };
-app.get('/health', cache({
-    cacheName: 'hello',
-    cacheControl: 'max-age=3600',
-}), async (c) => {
-    const info = await getConnInfo(c); // info is `ConnInfo`
-    console.log(info);
-    let ip = await getIp(c);
-    return c.json({ 'ok': true, time: new Date().getTime(), ip: ip });
-});
+// static routes
+app.use('/public/*', serveStatic({
+    root: './sounds',
+    rewriteRequestPath: (path) => path.replace(/^\/public/, '')
+}));
+app.use('/static/*', serveStatic({
+    root: './public',
+    rewriteRequestPath: (path) => path.replace(/^\/static/, '')
+}));
+// index page
 app.get('/', cache({
     cacheName: 'index',
     cacheControl: 'max-age=3600',
 }), async (c) => {
-    const info = getConnInfo(c); // info is `ConnInfo`
     let indexFile;
     if (indexFile) {
     }
@@ -103,6 +93,17 @@ app.get('/', cache({
     }
     return c.html(indexFile);
 });
+// health service
+app.get('/health', cache({
+    cacheName: 'hello',
+    cacheControl: 'max-age=3600',
+}), async (c) => {
+    const info = await getConnInfo(c); // info is `ConnInfo`
+    console.log(info);
+    let ip = await getIp(c);
+    return c.json({ 'ok': true, time: new Date().getTime(), ip: countedIpTable });
+});
+// just for using apps and with ip middleware and ratelimit
 app.get('/faal', checkDomainMiddleware, cache({
     cacheName: 'faal',
     cacheControl: 'max-age=3600',
@@ -119,8 +120,10 @@ app.get('/faal', checkDomainMiddleware, cache({
     const randomIndex = Math.floor(Math.random() * hafez.length);
     let randomFal = hafez[randomIndex];
     randomFal['src'] = `/public/Hafez-Song${String(randomIndex + 1).padStart(3, '0')}.mp3`;
+    randomFal['ok'] = true;
     return c.json(randomFal);
 });
+// Just for front Request with rate limit
 app.get('/falfront', rateLimitMiddleware, (c) => {
     let hafez;
     if (cachedFile) {
@@ -130,10 +133,11 @@ app.get('/falfront', rateLimitMiddleware, (c) => {
         cachedFile = readFileSync('./src/data.json', { encoding: 'utf8' });
         hafez = JSON.parse(cachedFile);
     }
-    console.log(`IP Table : `, countedIpTable);
+    // console.log(`IP Table in Front : `, countedIpTable);
     const randomIndex = Math.floor(Math.random() * hafez.length);
     let randomFal = hafez[randomIndex];
     randomFal['src'] = `/public/Hafez-Song${String(randomIndex + 1).padStart(3, '0')}.mp3`;
+    randomFal['ok'] = true;
     return c.json(randomFal);
 });
 const port = 3000;
