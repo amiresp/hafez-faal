@@ -6,27 +6,32 @@ import { etag } from 'hono/etag';
 import { logger } from 'hono/logger';
 import { serveStatic } from '@hono/node-server/serve-static';
 import { getConnInfo } from 'hono/cloudflare-workers';
-import { RateLimit } from "@rlimit/http";
 import { html, raw } from 'hono/html';
 import { isMiddleware } from 'hono/utils/handler';
+const WINDOW_MS = 1000; // بازه زمانی (مثال: 1s)
+const MAX_PER_WINDOW = 500; // سقف درخواست در هر بازه
 const app = new Hono();
 let cachedFile = null;
 let indexFile = null;
 let countedIpTable = [];
 app.use(logger());
 app.use('/public/*', etag());
-const rlimit = new RateLimit({
-    namespace: "example", // your rlimit.com namespace
-    maximum: 500,
-    interval: "1s",
-});
+const inMemoryLimits = new Map();
 const rateLimitMiddleware = async (c, next) => {
     const identifier = c.req.header("x-forwarded-for") || c.req.header("x-real-ip") || "anon";
-    console.info(identifier);
-    const limit = await rlimit.check(identifier);
-    console.info(limit, identifier);
-    if (!limit.ok) {
-        return c.json({ "ok": false, "message": "too many requests" }, 429);
+    const now = Date.now();
+    const item = inMemoryLimits.get(identifier);
+    if (!item || now > item.resetAt) {
+        // new window
+        inMemoryLimits.set(identifier, { count: 1, resetAt: now + WINDOW_MS });
+        await next();
+        return;
+    }
+    // inside window
+    item.count += 1;
+    if (item.count > MAX_PER_WINDOW) {
+        // rate limited
+        return c.json({ ok: false, message: 'too many requests' }, 429);
     }
     await next();
 };
