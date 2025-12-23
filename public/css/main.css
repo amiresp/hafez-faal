@@ -75,23 +75,67 @@ img {
 }
 
 .fal-content {
+    max-width: 720px;
     margin: 0 auto;
-    max-width: 400px;
-    text-align: center;
-    font-family: 'Golpayegani';
-    line-height: 1.85;
+    background: #fffef7;
+    padding: 2.5rem 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e8e0d2;
 }
 
 .fal-content p {
     margin: 0 auto;
     text-align: center;
-    font-size: 22px;
+    font-size: 16px;
     font-family: 'Golpayegani';
 }
 
 button.faal[disabled] {
     opacity: 0.5;
     pointer-events: none;
+}
+
+/* استایل شعر به شکل کتاب حافظ */
+.poem {
+    font-size: 1.35rem;
+    text-align: justify;
+    direction: rtl;
+    margin: 2.5rem 0;
+}
+
+.poem .beyt {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1.1em;
+    align-items: flex-start;
+    gap: 1.5rem;
+}
+
+.poem .mesra {
+    flex: 1;
+    text-align: right;
+    font-size: 14px;
+}
+
+.poem .mesra:nth-child(2) {
+    text-align: left;
+}
+
+/* تعبیر */
+.interpretation {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 2px dashed #c9a97e;
+    font-size: 1.15rem;
+    color: #3d2b1f;
+}
+
+.interpretation strong {
+    color: #8b4513;
+    font-size: 1.3rem;
+    display: block;
+    margin-bottom: 1rem;
 }
 
 @media screen and (max-width:640px) {

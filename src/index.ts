@@ -6,8 +6,6 @@ import { etag } from 'hono/etag'
 import { logger } from 'hono/logger'
 import { serveStatic } from '@hono/node-server/serve-static';
 import { getConnInfo } from 'hono/cloudflare-workers'
-import { html, raw } from 'hono/html'
-import { isMiddleware } from 'hono/utils/handler'
 
 type Counter = { count: number; resetAt: number };
 const WINDOW_MS = 1000;     // بازه زمانی (مثال: 1s)
@@ -175,6 +173,39 @@ app.get(
   }
 )
 
+// just for using apps and with ip middleware and ratelimit
+app.get(
+  '/faal/:id',
+  checkDomainMiddleware,
+  cache({
+    cacheName: 'faal',
+    cacheControl: 'max-age=3600',
+  }), async (c: Context) => {
+    let hafez;
+    const id = c.req.param('id');
+    // if (cachedFile) {
+    //   hafez = JSON.parse(cachedFile);
+    // } else {
+    cachedFile = readFileSync('./src/data-formatted.json',
+      { encoding: 'utf8' });
+    hafez = JSON.parse(cachedFile);
+    // }
+
+
+    const idNum = Number(id);
+
+    const idX = hafez.findIndex((item: any) => item.id === idNum);
+
+    // const randomIndex = Math.floor(Math.random() * hafez.length);
+    let faalTarget = hafez[idX];
+
+    faalTarget['src'] = `/public/Hafez-Song${String(idX + 1).padStart(3, '0')}.mp3`
+    faalTarget['ok'] = true;
+    return c.json(faalTarget)
+  }
+)
+
+
 // Just for front Request with rate limit
 app.get('/falfront', rateLimitMiddleware, (c: Context) => {
   let hafez;
@@ -196,6 +227,33 @@ app.get('/falfront', rateLimitMiddleware, (c: Context) => {
 
   return c.json(randomFal)
 })
+
+app.get('/falfront/:id', rateLimitMiddleware, (c: Context) => {
+  let hafez;
+  // if (cachedFile) {
+  //   hafez = JSON.parse(cachedFile);
+  // } else {
+  // cachedFile = readFileSync('./src/data.json',
+  //   { encoding: 'utf8' });
+  // hafez = JSON.parse(cachedFile);
+  cachedFile = readFileSync('./src/data-formatted.json',
+    { encoding: 'utf8' });
+  hafez = JSON.parse(cachedFile);
+  // }
+
+  const id = c.req.param('id');
+  const idNum = Number(id);
+
+  const idX = hafez.findIndex((item: any) => item.id === idNum);
+
+  let faalTarget = hafez[idX];
+
+  faalTarget['src'] = `/public/Hafez-Song${String(idX + 1).padStart(3, '0')}.mp3`
+  faalTarget['ok'] = true;
+
+  return c.json(faalTarget)
+})
+
 
 const port = 3000
 console.log(`Server is running on http://localhost:${port}`)
